@@ -1,0 +1,276 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <title>Bootstrap Example</title>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.1/jquery.min.js"></script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
+  <style>
+    /* Set height of the grid so .sidenav can be 100% (adjust as needed) */
+    .row.content {height: 550px}
+    
+    /* Set gray background color and 100% height */
+    .sidenav {
+      background-color: #f1f1f1;
+      height: 100%;
+    }
+       
+    .col11{
+      margin-bottom: -999px;
+      padding-bottom: 999px;
+
+    }
+    /* On small screens, set height to 'auto' for the grid */
+    @media screen and (max-width: 767px) {
+      .row.content {height: auto;} 
+    }
+  </style>
+</head>
+<body style="background-color: rgb(31, 30, 32);">
+
+
+
+    <div class="container-fluid">
+    <div class="row content">
+        <div class="">
+        <div class="row">
+            <div class="col-sm-4" style="padding: 5px;" style="background-color: rgb(32, 32, 41);">
+            <div class="well" style="color: #03A64A; background-color: rgb(32, 32, 41);">
+                
+                <h2 style="text-align: center;">MBIA FPT Taroudant</h2>
+                <h5 style="text-align: center;">Exam BigData 2 </h5>
+            </div>
+            </div>
+            <div class="col-sm-4" style="background-color: rgb(32, 32, 41);">
+            <div class="well" style="background-color: rgb(32, 32, 41);">
+                <h2 style="color: #03A64A; padding: 0; margin: 5px; text-align: center;">Maintenance Prédictive</h2>
+                <h5 style="text-align: center;">--</h5>
+                <h5 style="text-align: center;">--</h5>
+            </div>
+            </div>
+            <div class="col-sm-4" style="background-color: rgb(32, 32, 41);">
+            <div class="well" style="background-color: rgb(32, 32, 41);">
+                <img src="logo.png" width="100%" height="102px">            
+            </div>
+            </div>
+        </div>
+
+
+        <div class="row">
+            <div class="col-sm-4"style="background-color: rgb(32, 32, 41);">
+            <div class="well" style="background-color: rgb(32, 32, 41);">
+                
+                <canvas id="tempChart" height="160px" style="background-color: rgb(32, 32, 41);"></canvas>
+            </div>
+            </div>
+
+            <div class="col-sm-4" style="background-color: rgb(32, 32, 41);">
+            <div class="well" style="background-color: rgb(32, 32, 41);">
+                
+                <canvas id="VibChart" height="160px" style="background-color: rgb(32, 32, 41);"></canvas>
+            </div>
+            </div>
+
+            <div class="col-sm-4" style="background-color: rgb(32, 32, 41);">
+            <div class="well" style="background-color: rgb(32, 32, 41);">
+                
+                <canvas id="rotationChart" height="160px" style="background-color: rgb(32, 32, 41);"></canvas>
+            </div>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-sm-3" style="background-color: rgb(32, 32, 41);">
+                <div class="well" style="background-color: rgb(32, 32, 41);">
+                <canvas id="prevision1" style="background-color: rgb(32, 32, 41);"></canvas>
+                </div>
+            </div> 
+            <div class="col-sm-3" style="background-color: rgb(32, 32, 41);">           
+                <div class="well" style="background-color: rgb(32, 32, 41);">
+                <canvas id="prevision2" style="background-color: rgb(32, 32, 41);"></canvas>
+                </div>         
+            </div>       
+            <div class="col-sm-3" style="background-color: rgb(32, 32, 41);">         
+                <div class="well" style="background-color: rgb(32, 32, 41);">
+                <canvas id="prevision3" style="background-color: rgb(32, 32, 41);"></canvas>
+                </div>
+            </div>
+            <div class="col-sm-3" style="background-color: rgb(32, 32, 41);">         
+                <div class="well" style="background-color: rgb(32, 32, 41);">
+                <canvas id="prevision4" style="background-color: rgb(32, 32, 41);"></canvas>
+                </div>          
+            </div>       
+        </div>
+        
+        </div>
+    </div>
+    </div>
+    <script src="https://cdn.socket.io/4.5.4/socket.io.min.js" integrity="sha384-/KNQL8Nu5gCHLqwqfQjA689Hhoqgi2S84SNUxC3roTe4EhJ9AfLkp8QiQcU8AMzI" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script>
+        var socket = io();
+        var send = function(){
+            var text = document.getElementById('m').value;
+            socket.emit('dataChart', text);
+        }
+        //Temperature chart
+        const ctx = document.getElementById('tempChart');
+        const chart = new Chart(ctx, {
+            type: 'line',
+            data: {
+                labels: [],
+                datasets: [{
+                    label: 'Temperature Air',
+                    data: [],
+                    backgroundColor: 'rgba(235,159,4,0.1)',
+                    borderColor: '#EB9F04',
+                    pointRadius : 0,
+                    
+                    tension:0.4
+                }
+                , { 
+                    label: 'Temperature Motor',
+                    data: [],
+                    backgroundColor: 'rgba(54, 162, 235, 0.2)',
+                    borderColor: 'rgba(54, 162, 235, 1)',
+                    pointRadius : 0,
+                    tension:0.4
+                }
+            ]
+            },
+            options: {
+                tooltips: {
+                    enabled: true,
+                    mode: 'single',
+                    callbacks: {
+                        label: function(tooltipItem, data) {
+                            return data.datasets[tooltipItem.datasetIndex].label + ': ' + tooltipItem.yLabel;
+                        }
+                     }
+                },
+                plugins: {
+                    legend: {
+                      display: false,
+                    },
+                    title: {
+                      display: true,
+                      text: 'Temperature Air & Motor'
+                    }
+                }
+                
+            },
+            });
+
+            // Rotation chart 
+            const ctx1 = document.getElementById('rotationChart');
+            const chart1 = new Chart(ctx1, {
+                type: 'line',
+                data: {
+                    labels: [],
+                    datasets: [{
+                        label: 'Rotational speed [rpm]',
+                        data: [],
+                        backgroundColor: 'rgba(54, 162, 235, 0.2)',
+                        borderColor: 'rgba(54, 162, 235, 1)',
+                        pointRadius : 0,
+                        
+                        tension:0.4
+                        }
+                    ]
+                },
+                options: {
+                    tooltips: {
+                        enabled: true,
+                        mode: 'single',
+                        callbacks: {
+                            label: function(tooltipItem, data) {
+                                return data.datasets[tooltipItem.datasetIndex].label + ': ' + tooltipItem.yLabel;
+                            }
+                        }
+                    },
+                    plugins: {
+                        legend: {
+                        display: false,
+                        },
+                        title: {
+                        display: true,
+                        text: 'Rotational Speed [rpm]'
+                        }
+                    }
+                    
+                },
+        });
+
+        // tool wear [min] chart 
+        const ctx2 = document.getElementById('VibChart');
+        const chart2 = new Chart(ctx2, {
+                type: 'line',
+                data: {
+                    labels: [],
+                    datasets: [{
+                        label: 'Tool wear [min]',
+                        data: [],
+                        backgroundColor: 'rgba(235,159,4,0.1)',
+                        borderColor: '#EB9F04',
+                        pointRadius : 0,
+                        
+                        tension:0.4
+                        }
+                    ]
+                },
+                options: {
+                    tooltips: {
+                        enabled: true,
+                        mode: 'single',
+                        callbacks: {
+                            label: function(tooltipItem, data) {
+                                return data.datasets[tooltipItem.datasetIndex].label + ': ' + tooltipItem.yLabel;
+                            }
+                        }
+                    },
+                    plugins: {
+                        legend: {
+                        display: false,
+                        },
+                        title: {
+                        display: true,
+                        text: 'Tool wear [min]'
+                        }
+                    }
+                    
+                },
+        });
+        var receive = function(msg){   
+            console.log(msg);
+            const obj = JSON.parse(msg);
+            console.log(obj["prediction"] + "   " + obj["data"]["Air temperature [K]"])   
+            //const data = JSON.parse(obj["data"])
+
+            /*document.getElementById("temp").innerText = msg["temp"];  
+            document.getElementById("hum").innerText = msg["hum"]; 
+            */
+            var today = new Date();
+            h = today.getHours();
+            m = today.getMinutes();
+            time = h+":"+m;
+            chart.data.labels.push(time);
+            chart.data.datasets[0].data.push(parseFloat(obj["data"]["Air temperature [K]"]));
+            chart.data.datasets[1].data.push(parseFloat(obj["data"]["Process temperature [K]"]));
+            chart.update();
+            chart1.data.labels.push(time);
+            chart1.data.datasets[0].data.push(parseFloat(obj["data"]["Air temperature [K]"]));
+            
+            chart1.update();
+            chart2.data.labels.push(time);
+            chart2.data.datasets[0].data.push(parseFloat(obj["data"]["Tool wear [min]"]));
+            
+            chart2.update();
+            
+            //graphe_temperature("rotationChart",obj);
+        }
+        socket.on("dataChart", receive);
+    </script>
+</body>
+</html>

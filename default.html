@@ -1,0 +1,395 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <title>Bootstrap Example</title>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.1/jquery.min.js"></script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
+  <style>
+    /* Set height of the grid so .sidenav can be 100% (adjust as needed) */
+    .row.content {height: 550px}
+    
+    /* Set gray background color and 100% height */
+    .sidenav {
+      background-color: #f1f1f1;
+      height: 100%;
+    }
+       
+    .col11{
+      margin-bottom: -999px;
+      padding-bottom: 999px;
+
+    }
+    /* On small screens, set height to 'auto' for the grid */
+    @media screen and (max-width: 767px) {
+      .row.content {height: auto;} 
+    }
+  </style>
+</head>
+<body style="background-color: rgb(31, 30, 32);">
+
+
+
+<div class="container-fluid">
+  <div class="row content">
+    <div class="">
+      <div class="row">
+        <div class="col-sm-4" style="padding: 5px;" style="background-color: rgb(32, 32, 41);">
+          <div class="well" style="color: #03A64A; background-color: rgb(32, 32, 41);">
+            <h2 style="color: darkblue; padding: 0; margin: 5px; text-align: center;">Dashboard</h2>
+            <h5 style="text-align: center;">Mastre BigData & IA FPT Taroudant</h5>
+            <h5 style="text-align: center;">BigData 2 </h5>
+          </div>
+        </div>
+        <div class="col-sm-4" style="background-color: rgb(32, 32, 41);">
+          <div class="well" style="background-color: rgb(32, 32, 41);">
+            <div class="row" style="height: 102px;" >
+              <div class="col-sm-3" style="background-color: rgb(32, 32, 41);">
+                <img src="temp.png" width="100px" height="100px" style="float: left; vertical-align: bottom;">
+              </div>
+              <div class="col-sm-3" style="background-color: rgb(32, 32, 41);">
+                <span id="temp" style="text-align: left; font-size: 2em; color: goldenrod;"></span><span style="vertical-align: top; font-size: 2em; color: goldenrod;">C°</span>
+              </div>
+              <div class="col-sm-3" style="background-color: rgb(32, 32, 41);">
+                <img src="hum.png" width="90px" height="90px" style="float: left; vertical-align: bottom;">
+              </div>
+              <div class="col-sm-3" style="background-color: rgb(32, 32, 41);">
+                <span id="hum" style="text-align: left;font-size: 2em; color: #048ABF;"></span><span style="vertical-align: top; font-size: 2em; color: #048ABF;">%</span>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="col-sm-4" style="background-color: rgb(32, 32, 41);">
+          <div class="well" style="background-color: rgb(32, 32, 41);">
+            <img src="logo.png" width="100%" height="102px">            
+          </div>
+        </div>
+      </div>
+
+
+      <div class="row">
+        <div class="col-sm-4"style="background-color: rgb(32, 32, 41);">
+          <div class="well" style="background-color: rgb(32, 32, 41);">
+            
+            <canvas id="myChart" height="160px" style="background-color: rgb(32, 32, 41);"></canvas>
+          </div>
+        </div>
+
+        <div class="col-sm-4" style="background-color: rgb(32, 32, 41);">
+          <div class="well" style="background-color: rgb(32, 32, 41);">
+            
+            <canvas id="champs" height="160px" style="background-color: rgb(32, 32, 41);"></canvas>
+          </div>
+        </div>
+
+        <div class="col-sm-4" style="background-color: rgb(32, 32, 41);">
+          <div class="well" style="background-color: rgb(32, 32, 41);">
+            
+            <canvas id="co" height="160px" style="background-color: rgb(32, 32, 41);"></canvas>
+          </div>
+        </div>
+      </div>
+
+      <div class="row">
+        <div class="col-sm-3" style="background-color: rgb(32, 32, 41);">
+            <div class="well" style="background-color: rgb(32, 32, 41);">
+              <canvas id="prevision1" style="background-color: rgb(32, 32, 41);"></canvas>
+            </div>
+        </div> 
+        <div class="col-sm-3" style="background-color: rgb(32, 32, 41);">           
+            <div class="well" style="background-color: rgb(32, 32, 41);">
+              <canvas id="prevision2" style="background-color: rgb(32, 32, 41);"></canvas>
+            </div>         
+        </div>       
+        <div class="col-sm-3" style="background-color: rgb(32, 32, 41);">         
+            <div class="well" style="background-color: rgb(32, 32, 41);">
+              <canvas id="prevision3" style="background-color: rgb(32, 32, 41);"></canvas>
+            </div>
+        </div>
+        <div class="col-sm-3" style="background-color: rgb(32, 32, 41);">         
+            <div class="well" style="background-color: rgb(32, 32, 41);">
+              <canvas id="prevision4" style="background-color: rgb(32, 32, 41);"></canvas>
+            </div>          
+        </div>       
+      </div>
+       
+    </div>
+  </div>
+</div>
+
+
+        <script src="https://cdn.socket.io/4.5.4/socket.io.min.js" integrity="sha384-/KNQL8Nu5gCHLqwqfQjA689Hhoqgi2S84SNUxC3roTe4EhJ9AfLkp8QiQcU8AMzI" crossorigin="anonymous"></script>
+        <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+        <script>
+
+
+          const socket1 = new WebSocket('ws://localhost:8765');
+  
+          socket1.onmessage = function(event) {
+              //console.log(event.data); // Do something with the data
+              const data = JSON.parse(event.data);
+              date = data.date; 
+              temp = data.temp; 
+              hum = data.hum; 
+              
+              ps =[];
+              dt=[];
+              for(var x =0; x<date.length; x++){
+                  dt.push(date[x].slice(11,17));
+                  if(date[x].slice(11,17) == "00:00"){
+                    //console.log(date[x].slice(11,17) + "---après");
+                    ps.push(x);
+                    
+                  }
+              }
+              //console.log(ps);
+              
+              
+              dt1 = dt.slice(0 , ps[0]+1);
+              dt2 = dt.slice(ps[0]+1 , ps[1]+1);
+              dt3 = dt.slice(ps[1]+1 , ps[2]+1);
+              dt4 = dt.slice(ps[2]+1 , ps[3]+1);
+              
+              tmp1 = temp.slice(0 , ps[0]+1);
+              tmp2 = temp.slice(ps[0]+1 , ps[1]+1);
+              tmp3 = temp.slice(ps[1]+1 , ps[2]+1);
+              tmp4 = temp.slice(ps[2]+1 , ps[3]+1);
+
+              hum1 = hum.slice(0 , ps[0]+1);
+              hum2 = hum.slice(ps[0]+1 , ps[1]+1);
+              hum3 = hum.slice(ps[1]+1 , ps[2]+1);
+              hum4 = hum.slice(ps[2]+1 , ps[3]+1);
+
+              graphe_previsions("prevision1","prev1",date[ps[0]].slice(0,10),dt1,tmp1,hum1);
+              graphe_previsions("prevision2","prev2",date[ps[1]+1].slice(0,10),dt2,tmp2,hum2);
+              graphe_previsions("prevision3","prev3",date[ps[2]+1].slice(0,10),dt3,tmp3,hum3);
+              graphe_previsions("prevision4","prev4",date[ps[3]+1].slice(0,10),dt4,tmp4,hum4);
+            };
+            
+
+
+            function graphe_previsions(can,titre, dt , dat , temp ,hm){
+            const ctx_line2 = document.getElementById(can);
+            
+            new Chart(ctx_line2, {
+                type: 'line',
+                data: {
+                  labels: dat,
+                  datasets: [
+                  {
+                    label: 'Humidité',
+                    data: hm,
+                    pointRadius : 0,
+                    tension:0.4,
+                    backgroundColor: 'rgba(66,122,161,0.1)',
+                    borderColor: '#06668C',
+                    fill:true
+                  },
+                  {
+                    label: 'Température',
+                    data: temp,
+                    pointRadius : 0,
+                    tension:0.4,
+                    backgroundColor: 'rgba(235,159,4,0.1)',
+                    borderColor: '#EB9F04',
+                    fill:true
+                  }
+                  
+                  ]
+                },
+                options: {
+                  scales: {
+                    y: {
+                      beginAtZero: true
+                    }
+                  },
+                  plugins: {
+                    legend: {
+                        display: false
+                    },
+                    title: {
+                      display: true,
+                      text: "prévisions : " + dt
+                    }
+                  }
+
+                }
+              });
+          }
+        </script>
+
+
+
+
+        <script>
+            var socket = io();
+            var send = function(){
+                var text = document.getElementById('m').value;
+                socket.emit('linechart', text);
+            }
+            const ctx = document.getElementById('myChart');
+            const chart = new Chart(ctx, {
+            type: 'line',
+            data: {
+                labels: [],
+                datasets: [{
+                    label: 'Température',
+                    data: [],
+                    backgroundColor: 'rgba(235,159,4,0.1)',
+                    borderColor: '#EB9F04',
+                    pointRadius : 0,
+                    
+                    tension:0.4
+                }
+                , { 
+                    label: 'Humidité',
+                    data: [],
+                    backgroundColor: 'rgba(54, 162, 235, 0.2)',
+                    borderColor: 'rgba(54, 162, 235, 1)',
+                    pointRadius : 0,
+                    tension:0.4
+                }
+            ]
+            },
+            options: {
+                tooltips: {
+                    enabled: true,
+                    mode: 'single',
+                    callbacks: {
+                        label: function(tooltipItem, data) {
+                            return data.datasets[tooltipItem.datasetIndex].label + ': ' + tooltipItem.yLabel;
+                        }
+                     }
+                },
+                plugins: {
+                    legend: {
+                      display: false,
+                    },
+                    title: {
+                      display: true,
+                      text: 'Température & Humidité en Temps réel'
+                    }
+                }
+                
+            },
+            });
+            var receive = function(msg){   
+                console.log(msg["hum"] + "   " + msg["temp"])   
+                document.getElementById("temp").innerText = msg["temp"];  
+                document.getElementById("hum").innerText = msg["hum"]; 
+
+                chart.data.labels.push(msg["date"].slice(10,16));
+                chart.data.datasets[0].data.push(parseFloat(msg["temp"]));
+                chart.data.datasets[1].data.push(parseFloat(msg["hum"]));
+
+                chart.update();
+            }
+            socket.on("linechart", receive);
+        </script>
+        <script>
+           const ctx_bar = document.getElementById('champs');
+            labels_ = ['Sugar cane','Sugar beet','Tomatoes','Watermelons','Cucumbers and gherkins','Chillies and peppers green']
+            data_ = [2.5053986E7,2.1456817E7,1.9419225E7,1.1736693E7,1.0932209E7,1.0387677E7]
+            new Chart(ctx_bar, {
+                type: 'bar',
+                data: {
+                  labels: labels_,
+                  datasets: [{
+                    label: '10 Meilleures Champs',
+                    data: data_,
+                    
+                    backgroundColor: [
+                     '#A4BD01',
+                      '#679436','#47EAD0',
+                      '#EBF2FA',
+                      '#427AA1',
+                      '#06668C'
+                      
+                    ]
+                  }]
+                },
+                options: {
+                  indexAxis: 'y',
+                  scales: {
+                    x: {
+                      display: false,
+                    },
+                    y: {
+                      display: true,
+                      
+                    }
+                  },
+                  plugins: {
+                    legend: {
+                      display: false,
+                    },
+                    title: {
+                      display: true,
+                      text: 'Meilleurs Champs au Maroc'
+                    }
+                  }
+                }
+              });
+
+        </script>
+        <script>
+
+             valeurs = [
+              {x:1990,y:(640.7831/100), r:(640.7831/100)},
+              {x:1995, y: (1011.8948/100), r:(1011.8948/100)},
+              {x:2000, y:(1190.1839/100), r: (1190.1839/100)},
+              {x:2005, y: (1805.3782/100), r: (1805.3782/100)},
+              {x:2010, y: (3451.7344/100),r: (3451.7344/100)},
+              {x:2015, y: (3406.0697/100),r: (3406.0697/100)},
+              {x:2016, y: (2700.835/100),r: (2700.835/100)},
+              {x:2017, y: (2913.9182/100),r: (2913.9182/100)},
+
+              {x:2020, y: (3096.036/100),r: (3096.036/100)}]
+              var popCanvas = document.getElementById("co");
+
+
+              var popData = {
+                datasets: [{
+                  label: ['Émissions CO2 sur les terres agricoles'],
+                  data: valeurs,
+                  backgroundColor: "rgba(246, 177, 45, 0.2)"	
+                }]
+              };
+
+              var bubbleChart = new Chart(popCanvas, {
+                type: 'bubble',
+                data: popData,
+                options: {
+                  
+                  scales: {
+                    x: {
+                      display: true,
+                    },
+                    y: {
+                      display: false,
+                      
+                    }
+                  },
+                  plugins: {
+                    legend: {
+                      display: false,
+                    },
+                    title: {
+                      display: true,
+                      text: 'Émissions CO2 sur les terres agricoles'
+                    }
+                  }
+                }
+              });
+
+        </script>
+       
+
+      
+
+
+</body>
+</html>
